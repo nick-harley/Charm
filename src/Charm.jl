@@ -20,9 +20,9 @@ end
 __attributes__(::Val{a}) where a = error("Attribute $a is not defined in Charm.")
 __attributes__(a::Symbol) = __atyp__(Val{a}())
 
-__attributes__(::AttName{:pitch}) = Pitch
-__attributes__(::AttName{:onset}) = Time
-__attributes__(::AttName{:duration}) = Duration
+__attributes__(::Val{:pitch}) = Pitch
+__attributes__(::Val{:onset}) = Time
+__attributes__(::Val{:duration}) = Duration
 
 struct Attribute{N,T} <: Chakra.Attribute{N,T}
     Attribute(a::Symbol) = new{a,__attributes__(a)}()
@@ -37,6 +37,7 @@ __properties__(p::Symbol) = __properties__(Val{p}())
 
 struct Property{N,T} <: Chakra.Property{N,T}
     Property(p::Symbol) = new{p,__properties__(p)}()
+end
 
 
 # TODO: Defined chakra properties
@@ -65,4 +66,6 @@ function Chakra.geta(a::Attribute{:duration,Duration},c::Chakra.Constituent)::Op
     getduration(c)
 end
 
-end
+
+
+end # module
