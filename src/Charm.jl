@@ -1,4 +1,4 @@
-module CHARM
+module Charm
 
 using Chakra
 
