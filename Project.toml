@@ -1,0 +1,7 @@
+name = "Charm"
+uuid = "e2273620-1c64-487a-88f9-b29e28f5a7be"
+authors = ["Nick Harley <nickharley@protonmail.com>"]
+version = "0.1.0"
+
+[deps]
+Chakra = "23337c43-347c-4169-b193-f31a84c326bf"

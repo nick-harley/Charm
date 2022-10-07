@@ -1,0 +1,11 @@
+# This file is machine-generated - editing it directly is not advised
+
+julia_version = "1.7.3"
+manifest_format = "2.0"
+
+[[deps.Chakra]]
+git-tree-sha1 = "7e3e853b76bc5ddce7b8976c2ae415fa597c0b46"
+repo-rev = "main"
+repo-url = "https://github.com/nick-harley/Chakra.git"
+uuid = "23337c43-347c-4169-b193-f31a84c326bf"
+version = "0.1.0"
