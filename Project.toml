@@ -5,4 +5,5 @@ version = "0.1.0"
 
 [deps]
 Chakra = "23337c43-347c-4169-b193-f31a84c326bf"
+DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 MIDI = "f57c4921-e30c-5f49-b073-3f2f2ada663e"
