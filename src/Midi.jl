@@ -4,9 +4,6 @@ using MIDI, DataStructures
 using Chakra
 using ..Charm
 
-
-
-
 # CONCRETE ATTRIBUTE TYPES
 
 struct Pitch <: Charm.Pitch
@@ -85,7 +82,7 @@ struct Track{F,T} <: Constituent
 
     # Type of Midi tracks
     
-    notes::OrderedDict{Int,Note{F,T}}
+    notes::OrderedDict{NoteId{F,T},Note{F,T}}
 
     Track(F,T,t) = begin
         
