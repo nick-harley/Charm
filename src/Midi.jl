@@ -87,7 +87,7 @@ struct Track{F,T} <: Constituent
         notes = OrderedDict{Int,Note{F,T}}()
 
         for (N,note) in enumerate(getnotes(t))
-            notes[N] = Note(F,T,N,note)
+            notes[NoteId(F,T,N)] = Note(F,T,N,note)
         end
 
         return new{F,T}(notes)
