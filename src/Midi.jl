@@ -56,6 +56,10 @@ struct NoteId{F,T,N} <: Id
     NoteId(F::String,T::Int,N::Int) = NoteId(Symbol(F),T,N)
 end
 
+id(F) = FileId(F)
+id(F,T) = TrackId(F,T)
+id(F,T,N) = NoteId(F,T,N)
+
 # CONSTITUENTS
 
 struct Note{F,T,N} <: Constituent
@@ -84,10 +88,11 @@ struct Track{F,T} <: Constituent
     notes::OrderedDict{Int,Note{F,T}}
 
     Track(F,T,t) = begin
-        notes = OrderedDict{Int,Note{F,T}}()
+        
+        notes = OrderedDict{NoteId{F,T},Note{F,T}}()
 
         for (N,note) in enumerate(getnotes(t))
-            notes[NoteId(F,T,N)] = Note(F,T,N,note)
+            notes[id(F,T,N)] = Note(F,T,N,note)
         end
 
         return new{F,T}(notes)
@@ -104,7 +109,7 @@ struct File{F} <: Constituent
         tracks = OrderedDict{TrackId{F},Track{F}}()
         
         for (T,t) in enumerate(f.tracks)
-            tracks[TrackId(F,T)] = Track(F,T,t)
+            tracks[id(F,T)] = Track(F,T,t)
         end
         
         return new{F}(tracks)
@@ -126,7 +131,7 @@ function addFile(F::Symbol,f::MIDIFile,d::DataSet)
 
     # Insert a file to a data set
     
-    d.files[FileId(F)] = File(F,f)
+    d.files[id(F)] = File(F,f)
 end
 
 function addFile(path::String,d::DataSet)
@@ -150,8 +155,10 @@ Chakra.pts(c::Track) = collect(keys(c.notes))
 Chakra.pts(c::Note) = Id[]
 
 Chakra.fnd(x::FileId,h::DataSet) = Base.get(h.files,x,none)
-Chakra.fnd(x::TrackId{F},h::DataSet) where F = obind(fnd(FileId(F),h),f -> Base.get(f.tracks,x,none))
-Chakra.fnd(x::NoteId{F,T},h::DataSet) where {F,T}= obind(fnd(TrackId{F,T}),t -> Base.get(t.notes,x,none))
+Chakra.fnd(x::TrackId{F},h::DataSet) where F = obind(fnd(id(F),h),
+                                                     f->Base.get(f.tracks,x,none))
+Chakra.fnd(x::NoteId{F,T},h::DataSet) where {F,T} = obind(fnd(id(F,T)),
+                                                          t->Base.get(t.notes,x,none))
 
 
 
