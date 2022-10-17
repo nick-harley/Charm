@@ -152,11 +152,8 @@ Chakra.pts(c::Track) = collect(keys(c.notes))
 Chakra.pts(c::Note) = Id[]
 
 Chakra.fnd(x::FileId,h::DataSet) = Base.get(h.files,x,none)
-Chakra.fnd(x::TrackId{F},h::DataSet) where F = obind(fnd(id(F),h),
-                                                     f->Base.get(f.tracks,x,none))
-Chakra.fnd(x::NoteId{F,T},h::DataSet) where {F,T} = obind(fnd(id(F,T)),
-                                                          t->Base.get(t.notes,x,none))
+Chakra.fnd(x::TrackId{F},h::DataSet) where F = obind(fnd(id(F),h),f->Base.get(f.tracks,x,none))
 
-
+Chakra.fnd(x::NoteId{F,T},h::DataSet) where {F,T} = obind(fnd(id(F,T),h),t->Base.get(t.notes,x,none))
 
 end
