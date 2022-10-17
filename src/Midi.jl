@@ -146,7 +146,7 @@ end
 
 
 Chakra.pts(c::File) = collect(keys(c.tracks))
-Chakra.pts(c::Track) = collect(keys(c.particles))
+Chakra.pts(c::Track) = collect(keys(c.notes))
 Chakra.pts(c::Note) = Id[]
 
 Chakra.fnd(x::FileId,h::DataSet) = Base.get(h.files,x,none)
