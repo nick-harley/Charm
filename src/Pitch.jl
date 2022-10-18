@@ -11,9 +11,15 @@ gt(x::Interval,y::Interval)::Bool = Chakra.Error(gt,x,y,Bool)
 lte(x::Interval,y::Interval)::Bool = Chakra.Error(lte,x,y,Bool)
 gte(x::Interval,y::Interval)::Bool = Chakra.Error(gte,x,y,Bool)
 
-zero(::Type{T})::Interval where {T<:Interval} = Chakra.Error(zero,T)
+function zero(::Type{T})::Interval where {T<:Interval}
+    Chakra.Error(zero,T)
+end
+
 add(x::Interval,y::Interval)::Interval = Chakra.Error(add,x,y,Interval)
-inv(::Type{T})::Interval where {T<:Interval} = Chakra.Error(inv,T)
+
+function inv(::Type{T})::Interval where {T<:Interval}
+    Chakra.Error(inv,T)
+end
 
 diff(x::Pitch,y::Pitch)::Interval = Chakra.Error(diff,x,y,Interval)
 shift(x::Interval,y::Pitch)::Pitch = Charka.Error(shift,x,y,Pitch)

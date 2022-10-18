@@ -23,6 +23,8 @@ struct Duration <: Charm.Duration
 end
 
 
+### TODO: Operations
+
 
 # ABSTRACT TYPES
 
