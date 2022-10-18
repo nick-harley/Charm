@@ -4,95 +4,70 @@ export getpitch, getonset, getduration
 
 using Chakra
 
-abstract type Pitch end
-abstract type Interval end
-abstract type Time end 
-abstract type Duration end
-
-function lt end
-function gt end
-function lte end
-function gte end
-function zero end
-function add end
-function one end
-function mult end
-function inv end
-function diff end
-function shift end
-
-function diff(x::Pitch,y::Pitch)::Interval
-    Chakra.Error(diff,x,y,Interval)
-end
-
-function diff(x::Time,y::Time)::Duration
-    Chakra.Error(diff,x,y,Duration)
-end
-
-function shift(x::Interval,y::Pitch)::Pitch
-    Charka.Error(shift,x,y,Pitch)
-end
-
-function shift(x::Duration,y::Time)::Time
-    Chakra.Error(shift,x,y,Time)
-end
-
+# CHARM ATTRIBUTES
 
 __attributes__(::Val{a}) where a = error("Attribute $a is not defined in Charm.")
 __attributes__(a::Symbol) = __attributes__(Val{a}())
-
-__attributes__(::Val{:pitch}) = Pitch
-__attributes__(::Val{:onset}) = Time
-__attributes__(::Val{:duration}) = Duration
 
 struct Attribute{N,T} <: Chakra.Attribute{N,T}
     Attribute(a::Symbol) = new{a,__attributes__(a)}()
 end
 
-Chakra.__attributes__(::Val{Symbol("Charm.pitch")}) = Attribute(:pitch)
-Chakra.__attributes__(::Val{Symbol("Charm.onset")}) = Attribute(:onset)
-Chakra.__attributes__(::Val{Symbol("Charm.duration")}) = Attribute(:duration)
+# CHARM PROPERTIES
 
-__properties__(::Val{p}) where p = error("Attribute $p is not defined in Charm.")
+__properties__(::Val{p}) where p = error("Property $p is not defined in Charm.")
 __properties__(p::Symbol) = __properties__(Val{p}())
-
-
 
 struct Property{N,T} <: Chakra.Property{N,T}
     Property(p::Symbol) = new{p,__properties__(p)}()
 end
 
+# Defining Charm Abstract Data Types
+include("Operations.jl")
+include("Pitch.jl")
+include("Time.jl")
 
-# TODO: Defined chakra properties
+# Defining Charm Attributes
+__attributes__(::Val{:pitch}) = Pitch
+__attributes__(::Val{:onset}) = Time
+__attributes__(::Val{:duration}) = Duration
 
-function getpitch(c::Chakra.Constituent)::Option{Pitch} 
-    error("No implementation of Charm.getpitch : $(typeof(c)) -> Option{Pitch}")
-end
+Chakra.__attributes__(::Val{Symbol("Charm.pitch")}) = Attribute(:pitch)
+Chakra.__attributes__(::Val{Symbol("Charm.onset")}) = Attribute(:onset)
+Chakra.__attributes__(::Val{Symbol("Charm.duration")}) = Attribute(:duration)
 
-function getonset(c::Chakra.Constituent)::Option{Time}
-    error("No implementation of Charm.getonset : $(typeof(c)) -> Option{Time}")
-end
+# Defining Charm Properties
+abstract type Domain end
+struct Graphemic <: Domain end
+struct Auditory <: Domain end
+struct Acoustic <: Domain end
 
-function getduration(c::Chakra.Constituent)::Option{Duration}
-    error("No implementation of Charm.getduration : $(typeof(c)) -> Option{Duration}")
-end
+__properties__(::Val{:domain}) = Domain
+__properties__(::Val{:level}) = Int
 
-function Chakra.geta(a::Attribute{:pitch,Pitch},c::Chakra.Constituent)::Option{Pitch}
-    getpitch(c)
-end
+Chakra.__properties__(::Val{Symbol("Charm.domain")}) = Property(:domain)
+Chakra.__properties__(::Val{Symbol("Charm.level")}) = Property(:level)
 
-function Chakra.geta(a::Attribute{:onset,Time},c::Chakra.Constituent)::Option{Time}
-    getonset(c)
-end
+# Attribute Interface
+getpitch(c::Chakra.Constituent)::Option{Pitch} = Chakra.Error(getpitch,c,Option{Pitch})
+getonset(c::Chakra.Constituent)::Option{Time} = Chakra.Error(getonset,c,Option{Time})
+getduration(c::Chakra.Constituent)::Option{Duration} = Chakra.Error(getduration,c,Option{Duration})
 
-function Chakra.geta(a::Attribute{:duration,Duration},c::Chakra.Constituent)::Option{Duration}
-    getduration(c)
-end
+Chakra.geta(::Attribute{:pitch,Pitch},c::Chakra.Constituent)::Option{Pitch} = getpitch(c)
+Chakra.geta(::Attribute{:onset,Time},c::Chakra.Constituent)::Option{Time} = getonset(c)
+Chakra.geta(::Attribute{:duration,Duration},c::Chakra.Constituent)::Option{Duration} = getduration(c)
 
+# Property Interface
+getdomain(c::Chakra.Constituent)::Option{Domain} = Chakra.Error(getdomain,c,Option{Domain})
+getlevel(c::Chakra.Constituent)::Option{Int} = Chakra.Erro(getlevel,c,Option{Int})
+
+Chakra.getp(::Property{:domain,Domain},c::Chakra.Constituent)::Option{Domain} = getdomain(c)
+Chakra.getp(::Property{:level,Int},c::Chakra.Constituent)::Option{Int} = getlevel(c)
+
+
+# CONCRETE IMPLEMENTATIONS
 
 include("Midi.jl")
-
-
 
 
 end # module
