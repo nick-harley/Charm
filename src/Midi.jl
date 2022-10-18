@@ -63,10 +63,10 @@ struct Note{F,T,N} <: Constituent
 
     # Type of Midi notes
     
-    pitch
+    pitch::Pitch
     velocity
-    position
-    duration
+    position::Time
+    duration::Duration
     channel
 
     Note(F,T,N,note) = begin
@@ -155,5 +155,13 @@ Chakra.fnd(x::FileId,h::DataSet) = Base.get(h.files,x,none)
 Chakra.fnd(x::TrackId{F},h::DataSet) where F = obind(fnd(id(F),h),f->Base.get(f.tracks,x,none))
 
 Chakra.fnd(x::NoteId{F,T},h::DataSet) where {F,T} = obind(fnd(id(F,T),h),t->Base.get(t.notes,x,none))
+
+Charm.getpitch(n::Note)::Pitch = n.pitch
+Charm.getonset(n::Note)::Time = n.position
+Charm.getduration(n::Note)::Duration = n.duration
+
+Charm.getpitch(c::Constituent) = none
+Charm.getonset(c::Constituent) = none
+Charm.getduration(c::Constituent) = none
 
 end
