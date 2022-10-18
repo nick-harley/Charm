@@ -16,10 +16,7 @@ function zero(::Type{T})::Interval where {T<:Interval}
 end
 
 add(x::Interval,y::Interval)::Interval = Chakra.Error(add,x,y,Interval)
-
-function inv(::Type{T})::Interval where {T<:Interval}
-    Chakra.Error(inv,T)
-end
+inv(x::Interval)::Interval = Chakra.Error(inv,x,Interval)
 
 diff(x::Pitch,y::Pitch)::Interval = Chakra.Error(diff,x,y,Interval)
 shift(x::Interval,y::Pitch)::Pitch = Charka.Error(shift,x,y,Pitch)
