@@ -23,7 +23,6 @@ struct Property{N,T} <: Chakra.Property{N,T}
 end
 
 # Defining Charm Abstract Data Types
-include("Operations.jl")
 include("Pitch.jl")
 include("Time.jl")
 
