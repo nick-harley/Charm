@@ -6,34 +6,55 @@ using ..Charm
 
 # CONCRETE ATTRIBUTE TYPES
 
+# PITCH
+
 struct Pitch <: Charm.Pitch
     value::Int
 end
+
+Base.:<=(x::Pitch,y::Pitch)::Bool = x.value <= y.value 
 
 struct Interval <: Charm.Interval
     value::Int
 end
 
+Base.:<=(x::Interval,y::Interval)::Bool = x.value <= y.value
+zero(::Type{Interval})::Interval = Interval(0)
+Base.:+(x::Interval,y::Interval)::Interval = Interval(x.value + y.value)
+Base.:-(x::Interval)::Interval = Interval(-x.value)
+
+Charm.diff(x::Pitch,y::Pitch)::Interval = Interval(y.value-x.value)
+Charm.shift(x::Interval,y::Pitch)::Pitch = Pitch(y.value+x.value)
+
+# TIME
+
 struct Time <: Charm.Time
     value::Int
 end
+
+Base.:<=(x::Time,y::Time)::Bool = x.value <= y.value
 
 struct Duration <: Charm.Duration
     value::Int
 end
 
+Base.:<=(x::Duration,y::Duration)::Bool = x.value <= y.value
+zero(::Type{Duration})::Duration = Duration(0)
+Base.:+(x::Duration,y::Duration)::Duration = Duration(x.value+y.value)
+Base.:-(x::Duration)::Duration = Duration(-x.value)
 
-### TODO: Operations
+Charm.diff(x::Time,y::Time)::Duration = Interval(y.value-x.value)
+Charm.shift(x::Duration,y::Time)::Time = Time(y.value+x.value)
 
 
-# ABSTRACT TYPES
+
+# CHAKRA TYPES
 
 abstract type Id <: Chakra.Id end
 
 abstract type Constituent <: Chakra.Constituent end
 
 abstract type Hierarchy <: Chakra.Hierarchy end
-
 
 
 
@@ -59,24 +80,25 @@ id(F) = FileId(F)
 id(F,T) = TrackId(F,T)
 id(F,T,N) = NoteId(F,T,N)
 
+
 # CONSTITUENTS
 
 struct Note{F,T,N} <: Constituent
 
     # Type of Midi notes
-    
+
     pitch::Pitch
-    velocity
+    velocity::Int
     position::Time
     duration::Duration
-    channel
+    channel::Int
 
     Note(F,T,N,note) = begin
         new{F,T,N}(Pitch(note.pitch),
-                   note.velocity,
+                   Int(note.velocity),
                    Time(note.position),
                    Duration(note.duration),
-                   note.channel)
+                   Int(note.channel))
     end
 end
 
@@ -126,6 +148,10 @@ struct DataSet <: Hierarchy
     DataSet() = new(OrderedDict{FileId,File}())
 end
 
+
+
+# ADD MIDI FILE TO DATASET
+
 function addFile(F::Symbol,f::MIDIFile,d::DataSet)
 
     # Insert a file to a data set
@@ -155,7 +181,6 @@ Chakra.pts(c::Note) = Id[]
 
 Chakra.fnd(x::FileId,h::DataSet) = Base.get(h.files,x,none)
 Chakra.fnd(x::TrackId{F},h::DataSet) where F = obind(fnd(id(F),h),f->Base.get(f.tracks,x,none))
-
 Chakra.fnd(x::NoteId{F,T},h::DataSet) where {F,T} = obind(fnd(id(F,T),h),t->Base.get(t.notes,x,none))
 
 Charm.getpitch(n::Note)::Pitch = n.pitch
