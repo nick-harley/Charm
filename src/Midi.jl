@@ -12,7 +12,7 @@ struct NoteNumber <: Charm.Pitch
     value::Int
 end
 
-Base.:<=(x::Pitch,y::Pitch)::Bool = x.value <= y.value 
+Base.:<=(x::NoteNumber,y::NoteNumber)::Bool = x.value <= y.value 
 
 struct NoteInterval <: Charm.Interval
     value::Int
