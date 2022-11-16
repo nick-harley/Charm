@@ -8,23 +8,23 @@ using ..Charm
 
 # PITCH
 
-struct Pitch <: Charm.Pitch
+struct NoteNumber <: Charm.Pitch
     value::Int
 end
 
 Base.:<=(x::Pitch,y::Pitch)::Bool = x.value <= y.value 
 
-struct Interval <: Charm.Interval
+struct NoteInterval <: Charm.Interval
     value::Int
 end
 
-Base.:<=(x::Interval,y::Interval)::Bool = x.value <= y.value
-zero(::Type{Interval})::Interval = Interval(0)
-Base.:+(x::Interval,y::Interval)::Interval = Interval(x.value + y.value)
-Base.:-(x::Interval)::Interval = Interval(-x.value)
+Base.:<=(x::NoteInterval,y::NoteInterval)::Bool = x.value <= y.value
+zero(::Type{NoteInterval})::NoteInterval = NoteInterval(0)
+Base.:+(x::NoteInterval,y::NoteInterval)::NoteInterval = NoteInterval(x.value + y.value)
+Base.:-(x::NoteInterval)::NoteInterval = NoteInterval(-x.value)
 
-Charm.diff(x::Pitch,y::Pitch)::Interval = Interval(y.value-x.value)
-Charm.shift(x::Interval,y::Pitch)::Pitch = Pitch(y.value+x.value)
+Charm.diff(x::NoteNumber,y::NoteNumber)::NoteInterval = NoteInterval(y.value-x.value)
+Charm.shift(x::NoteInterval,y::NoteNumber)::NoteNumber = NoteNumber(y.value+x.value)
 
 # TIME
 
@@ -43,7 +43,7 @@ zero(::Type{Duration})::Duration = Duration(0)
 Base.:+(x::Duration,y::Duration)::Duration = Duration(x.value+y.value)
 Base.:-(x::Duration)::Duration = Duration(-x.value)
 
-Charm.diff(x::Time,y::Time)::Duration = Interval(y.value-x.value)
+Charm.diff(x::Time,y::Time)::Duration = NoteInterval(y.value-x.value)
 Charm.shift(x::Duration,y::Time)::Time = Time(y.value+x.value)
 
 
@@ -87,14 +87,14 @@ struct Note{F,T,N} <: Constituent
 
     # Type of Midi notes
 
-    pitch::Pitch
+    pitch::NoteNumber
     velocity::Int
     position::Time
     duration::Duration
     channel::Int
 
     Note(F,T,N,note) = begin
-        new{F,T,N}(Pitch(note.pitch),
+        new{F,T,N}(NoteNumber(note.pitch),
                    Int(note.velocity),
                    Time(note.position),
                    Duration(note.duration),
@@ -183,7 +183,7 @@ Chakra.fnd(x::FileId,h::DataSet) = Base.get(h.files,x,none)
 Chakra.fnd(x::TrackId{F},h::DataSet) where F = obind(fnd(id(F),h),f->Base.get(f.tracks,x,none))
 Chakra.fnd(x::NoteId{F,T},h::DataSet) where {F,T} = obind(fnd(id(F,T),h),t->Base.get(t.notes,x,none))
 
-Charm.getpitch(n::Note)::Pitch = n.pitch
+Charm.getpitch(n::Note)::NoteNumber = n.pitch
 Charm.getonset(n::Note)::Time = n.position
 Charm.getduration(n::Note)::Duration = n.duration
 
