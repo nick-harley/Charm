@@ -1,6 +1,7 @@
 module Charm
 
 export getpitch, getonset, getduration
+export diff, shift
 
 using Chakra
 

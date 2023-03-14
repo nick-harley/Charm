@@ -43,7 +43,7 @@ zero(::Type{Duration})::Duration = Duration(0)
 Base.:+(x::Duration,y::Duration)::Duration = Duration(x.value+y.value)
 Base.:-(x::Duration)::Duration = Duration(-x.value)
 
-Charm.diff(x::Time,y::Time)::Duration = NoteInterval(y.value-x.value)
+Charm.diff(x::Time,y::Time)::Duration = Duration(y.value-x.value)
 Charm.shift(x::Duration,y::Time)::Time = Time(y.value+x.value)
 
 
