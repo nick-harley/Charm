@@ -19,7 +19,7 @@ struct NoteInterval <: Charm.Interval
 end
 
 Base.:<=(x::NoteInterval,y::NoteInterval)::Bool = x.value <= y.value
-zero(::Type{NoteInterval})::NoteInterval = NoteInterval(0)
+Charm.zero(::Type{NoteInterval})::NoteInterval = NoteInterval(0)
 Base.:+(x::NoteInterval,y::NoteInterval)::NoteInterval = NoteInterval(x.value + y.value)
 Base.:-(x::NoteInterval)::NoteInterval = NoteInterval(-x.value)
 
@@ -39,7 +39,7 @@ struct Duration <: Charm.Duration
 end
 
 Base.:<=(x::Duration,y::Duration)::Bool = x.value <= y.value
-zero(::Type{Duration})::Duration = Duration(0)
+Charm.zero(::Type{Duration})::Duration = Duration(0)
 Base.:+(x::Duration,y::Duration)::Duration = Duration(x.value+y.value)
 Base.:-(x::Duration)::Duration = Duration(-x.value)
 
