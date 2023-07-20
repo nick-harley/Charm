@@ -8,7 +8,6 @@ zero(::Type{<:Interval})::Interval = Chakra.Error(zero,T)
 
 Base.:+(x::Interval,y::Interval)::Interval = Chakra.Error(+,x,y,Interval)
 Base.:-(x::Interval)::Interval = Chakra.Error(-,x,Interval)
-Base.:-(x::Interval,y::Interval) = y + (-x)
 
 diff(x::Pitch,y::Pitch)::Interval = Chakra.Error(diff,x,y,Interval)
 shift(x::Interval,y::Pitch)::Pitch = Charka.Error(shift,x,y,Pitch)
