@@ -69,6 +69,4 @@ Chakra.getp(::Property{:level,Int},c::Chakra.Constituent)::Option{Int} = getleve
 
 include("Midi.jl")
 
-include("IranianMusic.jl")
-
 end # module
