@@ -173,6 +173,9 @@ function addFile(paths::Vector{String},d::DataSet)
     end
 end
 
+struct MIDI_TYPE <: Chakra.Property{:MIDI_TYPE,String} end
+Chakra.__properties__(::Val{:MIDI_TYPE}) = MIDI_TYPE()
+
 Chakra.getp(::MIDI_TYPE,::File) = "Midi File"
 Chakra.getp(::MIDI_TYPE,::Track) = "Midi Track"
 Chakra.getp(::MIDI_TYPE,::Note) = "Midi Note"
