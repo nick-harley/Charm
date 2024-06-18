@@ -62,15 +62,15 @@ abstract type Hierarchy <: Chakra.Hierarchy end
 # IDS
 
 struct FileId{F} <: Id end
-FileId(F::Symbol) = new{F}()
+FileId(F::Symbol) = FileId{F}()
 FileId(F::String) = FileId(Symbol(F))
 
 struct TrackId{F,T} <: Id end
-TrackId(F::Symbol,T::Int) = new{F,T}()
+TrackId(F::Symbol,T::Int) = TrackId{F,T}()
 TrackId(F::String,T::Int) = TrackId(Symbol(F),T)
 
 struct NoteId{F,T,N} <: Id end
-NoteId(F::Symbol,T::Int,N::Int) = new{F,T,N}()
+NoteId(F::Symbol,T::Int,N::Int) = NoteId{F,T,N}()
 NoteId(F::String,T::Int,N::Int) = NoteId(Symbol(F),T,N)
 
 id(F) = FileId(F)
