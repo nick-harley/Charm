@@ -64,7 +64,6 @@ getlevel(c::Chakra.Constituent)::Option{Int} = Chakra.Erro(getlevel,c,Option{Int
 Chakra.getp(::Property{:domain,Domain},c::Chakra.Constituent)::Option{Domain} = getdomain(c)
 Chakra.getp(::Property{:level,Int},c::Chakra.Constituent)::Option{Int} = getlevel(c)
 
-
 # CONCRETE IMPLEMENTATIONS
 
 include("Midi.jl")

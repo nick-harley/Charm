@@ -26,6 +26,8 @@ Base.:-(x::NoteInterval)::NoteInterval = NoteInterval(-x.value)
 Charm.diff(x::NoteNumber,y::NoteNumber)::NoteInterval = NoteInterval(y.value-x.value)
 Charm.shift(x::NoteInterval,y::NoteNumber)::NoteNumber = NoteNumber(y.value+x.value)
 
+Base.:/(x::NoteInterval,y::NoteInterval) = x.value / y.value
+
 # TIME
 
 struct Time <: Charm.Time
@@ -46,6 +48,7 @@ Base.:-(x::Duration)::Duration = Duration(-x.value)
 Charm.diff(x::Time,y::Time)::Duration = Duration(y.value-x.value)
 Charm.shift(x::Duration,y::Time)::Time = Time(y.value+x.value)
 
+Base.:/(x::Duration, y::Duration) = x.value / y.value
 
 
 # CHAKRA TYPES
@@ -55,9 +58,6 @@ abstract type Id <: Chakra.Id end
 abstract type Constituent <: Chakra.Constituent end
 
 abstract type Hierarchy <: Chakra.Hierarchy end
-
-
-
 
 # IDS
 
@@ -149,7 +149,6 @@ struct DataSet <: Hierarchy
 end
 
 
-
 # ADD MIDI FILE TO DATASET
 
 function addFile(F::Symbol,f::MIDIFile,d::DataSet)
@@ -174,6 +173,9 @@ function addFile(paths::Vector{String},d::DataSet)
     end
 end
 
+Chakra.getp(::MIDI_TYPE,::File) = "Midi File"
+Chakra.getp(::MIDI_TYPE,::Track) = "Midi Track"
+Chakra.getp(::MIDI_TYPE,::Note) = "Midi Note"
 
 Chakra.pts(c::File) = collect(keys(c.tracks))
 Chakra.pts(c::Track) = collect(keys(c.notes))
@@ -182,6 +184,18 @@ Chakra.pts(c::Note) = Id[]
 Chakra.fnd(x::FileId,h::DataSet) = Base.get(h.files,x,none)
 Chakra.fnd(x::TrackId{F},h::DataSet) where F = obind(fnd(id(F),h),f->Base.get(f.tracks,x,none))
 Chakra.fnd(x::NoteId{F,T},h::DataSet) where {F,T} = obind(fnd(id(F,T),h),t->Base.get(t.notes,x,none))
+
+Chakra.dom(h::Charm.Midi.DataSet)::Vector{Chakra.Id} = begin
+    d = []
+    for f in h.files
+        push!(d,f[1])
+        append!(d,pts(f[2]))
+        for t in f[2].tracks
+            append!(d,pts(t[2]))
+        end
+    end
+    return d
+end
 
 Charm.getpitch(n::Note)::NoteNumber = n.pitch
 Charm.getonset(n::Note)::Time = n.position
