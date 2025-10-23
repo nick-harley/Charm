@@ -214,7 +214,7 @@ function writemidifile(xs::Vector{Tuple{Int,Int}},name::String,dir)
         velocity = 100
         dur = Int(tpq*pair[2]/24)
         
-        note = Note(pitch,100,pos,dur)
+        note = MIDI.Note(pitch,100,pos,dur)
         
         push!(notes,note)
         pos+=dur
@@ -223,7 +223,7 @@ function writemidifile(xs::Vector{Tuple{Int,Int}},name::String,dir)
     addnotes!(track, notes)
     
     midi = MIDIFile(0, tpq, [track])
-    #cd(dir)
+    cd(dir)
     save(name, midi)
 end
 
