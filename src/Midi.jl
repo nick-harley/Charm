@@ -207,7 +207,7 @@ Charm.getduration(c::Constituent) = none
 
 function writemidifile(xs::Vector{Tuple{Int,Int}},name::String,dir)
     tpq = 960
-    notes = Note[]
+    notes = MIDI.Note[]
     pos = 0
     for pair in xs
         pitch = pair[1]
