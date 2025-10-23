@@ -205,4 +205,26 @@ Charm.getpitch(c::Constituent) = none
 Charm.getonset(c::Constituent) = none
 Charm.getduration(c::Constituent) = none
 
+function writemidifile(xs::Vector{Tuple{Int,Int}},name::String,dir)
+    tpq = 960
+    notes = Note[]
+    pos = 0
+    for pair in xs
+        pitch = pair[1]
+        velocity = 100
+        dur = Int(tpq*pair[2]/24)
+        
+        note = Note(pitch,100,pos,dur)
+        
+        push!(notes,note)
+        pos+=dur
+    end
+    track = MIDITrack()
+    addnotes!(track, notes)
+    
+    midi = MIDIFile(0, tpq, [track])
+    #cd(dir)
+    save(name, midi)
+end
+
 end
